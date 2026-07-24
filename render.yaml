@@ -1,0 +1,51 @@
+services:
+  # 1. Express Backend Web Service
+  - type: web
+    name: omni-cms-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_EMAIL
+        value: admin@cms.com
+      - key: ADMIN_PASSWORD
+        value: adminpassword123
+
+  # 2. Admin Frontend Static Site
+  - type: site
+    name: omni-cms-admin
+    rootDir: admin-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+
+  # 3. Public Frontend Static Site
+  - type: site
+    name: omni-cms-public
+    rootDir: public-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_PUBLIC_API_URL
+        sync: false
