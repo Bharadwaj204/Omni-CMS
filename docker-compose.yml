@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # MongoDB Database Service
+  mongo:
+    image: mongo:6.0-alpine
+    container_name: cms_database
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - cms_network
+
+  # Node Express Backend API Service
+  backend:
+    build: ./backend
+    container_name: cms_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/cms_db
+      - JWT_SECRET=super_secret_jwt_key_change_me_in_production
+      - JWT_EXPIRES_IN=7d
+      - ADMIN_USERNAME=admin
+      - ADMIN_EMAIL=admin@cms.com
+      - ADMIN_PASSWORD=adminpassword123
+    depends_on:
+      - mongo
+    networks:
+      - cms_network
+
+  # Admin Frontend CMS Dashboard Service
+  admin-frontend:
+    build:
+      context: ./admin-frontend
+      args:
+        - VITE_API_URL=http://localhost:5000/api/v1
+    container_name: cms_admin_dashboard
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - cms_network
+
+  # Public Frontend Viewer Portal Service
+  public-frontend:
+    build:
+      context: ./public-frontend
+      args:
+        - VITE_PUBLIC_API_URL=http://localhost:5000/api/v1
+    container_name: cms_public_portal
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+    networks:
+      - cms_network
+
+volumes:
+  mongo_data:
+
+networks:
+  cms_network:
+    driver: bridge
