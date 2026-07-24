@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchPages, deletePage, seedPagesDatabase } from '../store/slices/pagesSlice';
-import { 
-  FileText, 
-  Edit3, 
-  Trash2, 
-  ExternalLink, 
-  Search, 
-  RefreshCw, 
+import {
+  FileText,
+  Edit3,
+  Trash2,
+  ExternalLink,
+  Search,
+  RefreshCw,
   Database,
   Plus,
   Loader2
@@ -38,7 +38,7 @@ const Dashboard = () => {
   };
 
   // Filter pages by search query
-  const filteredPages = pages.filter(page => 
+  const filteredPages = pages.filter(page =>
     page.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     page.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (page.description && page.description.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -46,7 +46,7 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8 font-sans">
-      
+
       {/* Dashboard Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -84,10 +84,10 @@ const Dashboard = () => {
         </div>
         <div className="bg-zinc-900 border border-zinc-800/80 rounded-xl p-5">
           <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold block">Public Site URL</span>
-          <a 
-            href="http://localhost:5174" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <a
+            href="https://omni-cms-public.onrender.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-sm font-semibold text-violet-400 hover:text-violet-300 flex items-center space-x-1 mt-2.5"
           >
             <span>Visit Website</span>
